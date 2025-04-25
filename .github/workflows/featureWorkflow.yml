@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'feature/*'  # Trigger on any push to feature branches
+      - 'develop' 
 
 jobs:
   lint:
