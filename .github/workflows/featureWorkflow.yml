@@ -1,9 +1,10 @@
 name: CI for Feature Branches
+
 on:
   push:
     branches:
       - 'feature/*'  # Trigger on any push to feature branches
-      - 'develop' 
+      - 'develop'    # Also trigger on pushes to develop branch
 
 jobs:
   lint:
@@ -12,16 +13,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
+      - name: Set up Node.js for Frontend
         uses: actions/setup-node@v2
         with:
           node-version: '20.18.1'  
 
-      - name: Install dependencies
-        run: npm install  
-        
-      - name: Run Linting
+      - name: Install dependencies for Frontend
+        run: npm install
+        working-directory: ./frontend  # Adjust the path to your frontend directory
+
+      - name: Run Linting for Frontend
         run: npm run lint
+        working-directory: ./frontend  # Linting for frontend
+
+      - name: Set up Node.js for Backend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.18.1'
+
+      - name: Install dependencies for Backend
+        run: npm install
+        working-directory: ./backend  # Adjust the path to your backend directory
+
+      - name: Run Linting for Backend
+        run: npm run lint
+        working-directory: ./backend  # Linting for backend
 
   test:
     runs-on: ubuntu-latest
@@ -29,8 +45,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Install dependencies for Frontend
         run: npm install
+        working-directory: ./frontend  # Install frontend dependencies
 
-      - name: Run Tests
+      - name: Run Tests for Frontend
         run: npm test
+        working-directory: ./frontend  # Run frontend tests
+
+      - name: Install dependencies for Backend
+        run: npm install
+        working-directory: ./backend  # Install backend dependencies
+
+      - name: Run Tests for Backend
+        run: npm test
+        working-directory: ./backend  # Run backend tests
