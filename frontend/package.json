@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@ljharb/tsconfig": "^0.3.2",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.37.5",
