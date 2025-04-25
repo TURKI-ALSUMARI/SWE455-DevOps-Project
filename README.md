@@ -11,7 +11,7 @@ The **Stocks Tracker Application** is a platform designed to monitor and track s
 ### Backend:
 - **Search by stock code**: Allows users to search for stocks by their unique ticker symbol.
 - **Search by stock name**: Allows users to search for stocks by their company name.
-- **Historical data**: Fetch historical stock data (price, volume, etc.).
+- **Historical data**: Fetch histonvmrical stock data (price, volume, etc.).
 
 ### Frontend:
 - Basic HTML and CSS frontend to interact with the backend.
