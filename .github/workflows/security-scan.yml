@@ -1,0 +1,31 @@
+name: Security Scan (CodeQL)
+
+on:
+  push:
+    branches:
+      - 'feature/*'  # Trigger on any push to feature branches
+      - 'develop'
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  security_scan:
+    name: Run CodeQL analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up CodeQL
+        uses: github/codeql-action/setup@v2
+
+      - name: Initialize CodeQL database
+        run: |
+          mkdir -p codeql
+          codeql database init --language=javascript codeql/  
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: 'security'
