@@ -3,8 +3,8 @@ name: Backend CI
 on:
   push:
     branches:
-      - 'feature/*'
-      - 'develop'
+      - 'feature/*'  # Trigger on any push to feature branches
+      - 'develop'    # Also trigger on pushes to develop branch
 
 jobs:
   lint:
@@ -12,15 +12,30 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Set up Node.js for Backend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.18.1'
+
+      - name: Install dependencies for Backend
+        run: npm install
+        working-directory: ./backend  # Adjust the path to your backend directory
+
       - name: Run Linting for Backend
         run: npm run lint
-        working-directory: ./backend
+        working-directory: ./backend  # Linting for backend
 
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Install dependencies for Backend
+        run: npm install
+        working-directory: ./backend  # Install backend dependencies
+
       - name: Run Tests for Backend
         run: npm test
-        working-directory: ./backend
+        working-directory: ./backend  # Run backend tests
