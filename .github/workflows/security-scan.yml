@@ -1,4 +1,4 @@
-name: Security Scan (CodeQL)
+name: Trivy Vulnerability Scan
 
 on:
   push:
@@ -10,22 +10,18 @@ on:
       - 'main'
 
 jobs:
-  security_scan:
-    name: Run CodeQL analysis
+  trivy_scan:
+    name: Run Trivy Security Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up CodeQL
-        uses: github/codeql-action/setup@v2
-
-      - name: Initialize CodeQL database
+      - name: Install Trivy
         run: |
-          mkdir -p codeql
-          codeql database init --language=javascript codeql/  
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.22.0/trivy_0.22.0_Linux-64bit.tar.gz
+          tar zxvf trivy_0.22.0_Linux-64bit.tar.gz
+          sudo mv trivy /usr/local/bin/
 
-      - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v2
-        with:
-          category: 'security'
+      - name: Run Trivy scan on codebase
+        run: trivy fs --severity HIGH,CRITICAL --ignore-unfixed .
