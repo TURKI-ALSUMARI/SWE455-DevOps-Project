@@ -41,8 +41,10 @@ const handleStockSearch = async (term, type) => {
         return [{
           symbol: term,
           name: response.data.name || term.toUpperCase(),
-          price: parseFloat(response.data.close),
-          change: parseFloat(response.data.change)
+          price: parseFloat(response.data.close || 0),
+          change: parseFloat(response.data.change || 0),
+          weekLow: response.data.fifty_two_week ? parseFloat(response.data.fifty_two_week.low || 0) : 0,
+          weekHigh: response.data.fifty_two_week ? parseFloat(response.data.fifty_two_week.high || 0) : 0
         }];
       } else {
         console.log('No quote data found in response or API error');
@@ -107,7 +109,9 @@ const handleStockSearch = async (term, type) => {
               symbol: symbol,
               name: match.instrument_name,
               price: parseFloat(quoteData.close || 0),
-              change: parseFloat(quoteData.change || 0)
+              change: parseFloat(quoteData.change || 0),
+              weekLow: parseFloat(quoteData.fifty_two_week?.low || 0),
+              weekHigh: parseFloat(quoteData.fifty_two_week?.high || 0)
             };
           }
           

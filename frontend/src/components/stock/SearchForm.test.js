@@ -12,6 +12,7 @@ jest.mock('@heroui/react', () => {
     Input: (props) => (
       <input 
         data-testid="heroui-input"
+        id="search"
         placeholder={props.placeholder}
         value={props.value || ""}
         onChange={props.onChange}
@@ -23,8 +24,8 @@ jest.mock('@heroui/react', () => {
       </form>
     ),
     RadioGroup: ({ children, label, value, onValueChange }) => (
-      <div data-testid="heroui-radio-group" aria-label={label}>
-      
+      <fieldset data-testid="heroui-radio-group" aria-label={label}>
+        <legend>{label}</legend>
         {Array.isArray(children) 
           ? children.map(child => ({
               ...child,
@@ -43,12 +44,13 @@ jest.mock('@heroui/react', () => {
               }
             }
         }
-      </div>
+      </fieldset>
     ),
     Radio: ({ value, children, checked, onChange }) => (
       <div>
         <input
           type="radio"
+          id={`radio-${value}`}
           data-testid={`radio-${value}`}
           value={value}
           checked={checked || false}
@@ -64,62 +66,80 @@ describe('SearchForm', () => {
   const mockOnSearch = jest.fn();
 
   beforeEach(() => {
-    mockOnSearch.mockClear();
+    jest.clearAllMocks();
   });
 
-  test('renders the form with default values', () => {
+  test('renders all form elements correctly', () => {
     render(<SearchForm onSearch={mockOnSearch} />);
     
+    // Check radio options
+    expect(screen.getByTestId('radio-symbol')).toBeInTheDocument();
+    expect(screen.getByTestId('radio-name')).toBeInTheDocument();
     expect(screen.getByText('Stock Symbol')).toBeInTheDocument();
-    expect(screen.getByTestId('heroui-button')).toBeInTheDocument();
-    expect(screen.getByTestId('heroui-input')).toBeInTheDocument();
-    expect(screen.getByText('Enter Stock Symbol')).toBeInTheDocument();
+    expect(screen.getByText('Company Name')).toBeInTheDocument();
+    
+    // Check input field
+    expect(screen.getByPlaceholderText(/e.g. AAPL, MSFT/i)).toBeInTheDocument();
+    
+    // Check button
+    expect(screen.getByRole('button', { name: /Search/i })).toBeInTheDocument();
+    // Button should be disabled initially
+    expect(screen.getByRole('button', { name: /Search/i })).toBeDisabled();
   });
 
-  test('updates search term when input changes', () => {
+  test('disables search button when input is empty', () => {
     render(<SearchForm onSearch={mockOnSearch} />);
-    
-    const input = screen.getByTestId('heroui-input');
-    fireEvent.change(input, { target: { value: 'AAPL' } });
-    
-    const submitButton = screen.getByTestId('heroui-button');
-    fireEvent.click(submitButton);
-    
-    expect(mockOnSearch).toHaveBeenCalledWith({ 
-      type: 'symbol', 
-      term: 'AAPL' 
-    });
+    const searchButton = screen.getByRole('button', { name: /Search/i });
+    expect(searchButton).toBeDisabled();
   });
 
-  test('changes form mode when switching search type', () => {
+  test('enables search button when input has text', () => {
     render(<SearchForm onSearch={mockOnSearch} />);
-
-    expect(screen.getByText('Enter Stock Symbol')).toBeInTheDocument();
-
-    const nameRadio = screen.getByTestId('radio-name');
-    fireEvent.click(nameRadio);
-
-    try {
-      const companyNameLabel = screen.getByText(/Enter Company Name/i);
-      expect(companyNameLabel).toBeInTheDocument();
-    } catch (e) {
-      expect(nameRadio).toBeChecked();
-    }
-
+    const searchInput = screen.getByPlaceholderText(/e.g. AAPL, MSFT/i);
+    const searchButton = screen.getByRole('button', { name: /Search/i });
+    
+    fireEvent.change(searchInput, { target: { value: 'AAPL' } });
+    expect(searchButton).not.toBeDisabled();
   });
 
-  test('button is disabled when search term is empty', () => {
+  test('updates placeholder when search type changes', () => {
     render(<SearchForm onSearch={mockOnSearch} />);
     
-    const input = screen.getByTestId('heroui-input');
-    const submitButton = screen.getByTestId('heroui-button');
-
-    expect(submitButton).toHaveAttribute('disabled');
-
-    fireEvent.change(input, { target: { value: 'AAPL' } });
-    expect(submitButton).not.toHaveAttribute('disabled');
-
-    fireEvent.change(input, { target: { value: '' } });
-    expect(submitButton).toHaveAttribute('disabled');
+    // Initially shows symbol placeholder
+    expect(screen.getByPlaceholderText(/e.g. AAPL, MSFT/i)).toBeInTheDocument();
+    
+    // Change to company name search
+    fireEvent.click(screen.getByTestId('radio-name'));
+    
+    // Now shows company name placeholder
+    expect(screen.getByPlaceholderText(/e.g. Apple, Microsoft/i)).toBeInTheDocument();
+  });
+  
+  test('calls onSearch with correct parameters when submitted', () => {
+    render(<SearchForm onSearch={mockOnSearch} />);
+    
+    const searchInput = screen.getByPlaceholderText(/e.g. AAPL, MSFT/i);
+    const searchButton = screen.getByRole('button', { name: /Search/i });
+    
+    // Type into input
+    fireEvent.change(searchInput, { target: { value: 'AAPL' } });
+    
+    // Submit form
+    fireEvent.click(searchButton);
+    
+    // Check if onSearch was called with correct parameters
+    expect(mockOnSearch).toHaveBeenCalledWith({ type: 'symbol', term: 'AAPL' });
+    
+    // Change to company name search
+    fireEvent.click(screen.getByTestId('radio-name'));
+    
+    // Change input
+    fireEvent.change(searchInput, { target: { value: 'Apple' } });
+    
+    // Submit form again
+    fireEvent.click(searchButton);
+    
+    // Check if onSearch was called with correct parameters
+    expect(mockOnSearch).toHaveBeenCalledWith({ type: 'name', term: 'Apple' });
   });
 });
