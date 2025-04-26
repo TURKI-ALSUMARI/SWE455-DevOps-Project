@@ -29,7 +29,9 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "test:ci": "react-scripts test --watchAll=false --coverage",
-    "test:lint": "npm run lint && npm run test:ci"
+    "test:lint": "npm run lint && npm run test:ci",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "test:watch": "react-scripts test --watch"
   },
   "eslintConfig": {
     "extends": [

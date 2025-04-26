@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import SearchForm from '../components/stock/SearchForm';
 import StockResults from '../components/stock/StockResults';
 
@@ -12,18 +12,29 @@ function SearchPage() {
     setError(null);
     
     try {
-      console.log('Searching with params:', searchParams);
-      setTimeout(() => {
-        const mockResults = [
-          { symbol: 'AAPL', name: 'Apple Inc.', price: 173.45, change: 2.33 },
-          { symbol: 'MSFT', name: 'Microsoft Corporation', price: 342.78, change: -1.05 },
-        ];
-        setSearchResults(mockResults);
-        setLoading(false);
-      }, 1000);
+      const apiUrl = `http://localhost:3000/api/stocks/search?term=${encodeURIComponent(searchParams.term)}&type=${searchParams.type}`;
+      
+      const response = await fetch(apiUrl);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API error response:', errorText);
+        
+        throw new Error(`API returned ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      if (!Array.isArray(data)) {
+        throw new Error('Invalid response format from API');
+      }
+      
+      setSearchResults(data);
       
     } catch (err) {
-      setError('Failed to search stocks. Please try again.');
+      console.error('Search error:', err);
+      setError(err.message || 'Failed to search stocks. Please try again.');
+    } finally {
       setLoading(false);
     }
   };

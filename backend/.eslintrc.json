@@ -1,0 +1,36 @@
+{
+  "env": {
+    "node": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "security",
+    "jest"
+  ],
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-console": "off",
+    "security/detect-object-injection": "warn",
+    "security/detect-non-literal-regexp": "warn",
+    "security/detect-unsafe-regex": "error",
+    "security/detect-eval-with-expression": "error"
+  },
+  "settings": {},
+  "root": true,
+  "overrides": [
+    {
+      "files": ["**/*.test.js", "**/*.spec.js"],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
+}
