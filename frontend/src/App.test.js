@@ -2,23 +2,26 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-// Mock the HeroUI button since we're not testing its internal functionality
-jest.mock('@heroui/react', () => ({
-  Button: ({ children, ...props }) => (
-    <button data-testid="heroui-button" {...props}>
-      {children}
-    </button>
-  )
-}));
+jest.mock('./pages/SearchPage', () => {
+  const MockSearchPage = () => <div data-testid="mock-search-page">SearchPage</div>;
+  MockSearchPage.displayName = 'MockSearchPage'; 
+  return MockSearchPage;
+});
 
 test('renders stock tracker title', () => {
   render(<App />);
-  const titleElement = screen.getByText(/Stock Tracker Application/i);
+  const titleElement = screen.getByText(/^Stock Tracker$/i);
   expect(titleElement).toBeInTheDocument();
 });
 
-test('renders get started button', () => {
+test('renders footer with copyright', () => {
   render(<App />);
-  const buttonElement = screen.getByTestId('heroui-button');
-  expect(buttonElement).toHaveTextContent(/Get Started/i);
+  const footerElement = screen.getByText(/© 2025 Stock Tracker/i);
+  expect(footerElement).toBeInTheDocument();
+});
+
+test('renders SearchPage component', () => {
+  render(<App />);
+  const searchPageElement = screen.getByTestId('mock-search-page');
+  expect(searchPageElement).toBeInTheDocument();
 });
