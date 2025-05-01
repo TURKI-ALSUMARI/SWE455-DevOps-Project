@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  stock-service:
+    build: ./backend/stock-service
+    ports:
+      - "3001:3001"
+
+  api-gateway:
+    build: ./backend/api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - stock-service
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - api-gateway
+
