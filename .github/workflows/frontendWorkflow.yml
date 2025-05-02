@@ -48,7 +48,7 @@ jobs:
         
       # Upload test reports as artifacts (no coverage)
       - name: Upload Test Reports
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3 
         if: always()  # Run even if tests fail
         with:
           name: frontend-test-reports
