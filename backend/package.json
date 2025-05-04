@@ -8,6 +8,7 @@
     "start:stock": "node stock-service/index.js",
     "dev": "concurrently \"nodemon api-gateway/index.js\" \"nodemon stock-service/index.js\"",
     "test": "jest",
+    "test:report": "jest --ci",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
@@ -23,6 +24,7 @@
     "eslint-plugin-jest": "^28.11.0",
     "eslint-plugin-security": "^3.0.1",
     "jest": "^29.7.0",
+    "jest-junit": "^16.0.0",
     "nodemon": "^3.0.1",
     "supertest": "^7.1.0"
   },

@@ -26,37 +26,30 @@ jobs:
         run: npm run lint
         working-directory: ./frontend  # Linting for frontend
 
-      # - name: Set up Node.js for Backend
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: '20.18.1'
-
-      # - name: Install dependencies for Backend
-      #   run: npm install
-      #   working-directory: ./backend  # Adjust the path to your backend directory
-
-      # - name: Run Linting for Backend
-      #   run: npm run lint
-      #   working-directory: ./backend  # Linting for backend
-
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up Node.js for Frontend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.18.1'
+
       - name: Install dependencies for Frontend
         run: npm install
         working-directory: ./frontend  # Install frontend dependencies
 
-      - name: Run Tests for Frontend
-        run: npm test
-        working-directory: ./frontend  # Run frontend tests
-
-      # - name: Install dependencies for Backend
-      #   run: npm install
-      #   working-directory: ./backend  # Install backend dependencies
-
-      # - name: Run Tests for Backend
-      #   run: npm test
-      #   working-directory: ./backend  # Run backend tests
+      # Generate test reports only (no coverage)
+      - name: Run Tests with Reports
+        run: npm run test:report
+        working-directory: ./frontend
+        
+      # Upload test reports as artifacts (no coverage)
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v4
+        if: always()  # Run even if tests fail
+        with:
+          name: frontend-test-reports
+          path: frontend/test-reports/

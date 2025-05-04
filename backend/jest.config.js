@@ -13,5 +13,13 @@ module.exports = {
       lines: 70,
       statements: 70
     }
-  }
+  },
+  // Add these lines for test reports
+  reporters: [
+    'default',
+    ['jest-junit', {
+      outputDirectory: './test-reports',
+      outputName: 'junit.xml'
+    }]
+  ]
 };
