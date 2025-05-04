@@ -8,9 +8,10 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+const STOCK_SERVICE_URL = process.env.STOCK_SERVICE_URL || 'http://localhost:3001';
 
 app.use('/api/stocks', createProxyMiddleware({ 
-  target: 'http://localhost:3001',
+  target: STOCK_SERVICE_URL,
   changeOrigin: true,
   pathRewrite: {
     '^/api/stocks/search': '/api/search',  
