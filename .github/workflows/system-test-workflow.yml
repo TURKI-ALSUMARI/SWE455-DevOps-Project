@@ -1,0 +1,91 @@
+name: System Tests
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'release/*'
+
+jobs:
+  system-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.18.1'
+
+      - name: Setup environment
+        run: |
+          echo "TWELVE_DATA_API_KEY=${{ secrets.TWELVE_DATA_API_KEY }}" >> $GITHUB_ENV
+          echo "PORT=3001" >> $GITHUB_ENV
+
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Install stock-service dependencies
+        run: npm install
+        working-directory: ./backend/stock-service
+
+      - name: Install api-gateway dependencies
+        run: npm install
+        working-directory: ./backend/api-gateway
+
+      - name: Generate .env file
+        run: ./generate.sh
+
+      - name: Build and start services with Docker
+        run: |
+          docker-compose build
+          docker-compose up -d
+
+      - name: Wait for services to be ready
+        run: |
+          echo "Waiting for services to be ready..."
+          MAX_RETRIES=30
+          RETRY_INTERVAL=2
+          
+          # Wait for frontend
+          retries=0
+          while [ $retries -lt $MAX_RETRIES ]; do
+            if curl -s http://localhost:8080 > /dev/null; then
+              echo "Frontend is up!"
+              break
+            fi
+            retries=$((retries+1))
+            echo "Waiting for frontend to be ready... ($retries/$MAX_RETRIES)"
+            sleep $RETRY_INTERVAL
+          done
+          
+          if [ $retries -eq $MAX_RETRIES ]; then
+            echo "Frontend failed to start in time"
+            exit 1
+          fi
+
+      - name: Run system tests
+        run: npx cypress run --spec "cypress/e2e/system-test.cy.js"
+        working-directory: ./frontend
+
+      - name: Upload Cypress Videos
+        uses: actions/upload-artifact@v4
+        if: always()  # Run even if tests fail
+        with:
+          name: cypress-videos
+          path: frontend/cypress/videos/
+          retention-days: 7
+
+      - name: Upload Cypress Screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()  # Only upload screenshots on test failure
+        with:
+          name: cypress-screenshots
+          path: frontend/cypress/screenshots/
+          retention-days: 7
+
+      - name: Stop Docker services
+        if: always()  # Run even if previous steps fail
+        run: docker-compose down

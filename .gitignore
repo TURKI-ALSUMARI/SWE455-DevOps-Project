@@ -20,6 +20,10 @@
 junit.xml
 coverage/
 
+# Cypress
+/frontend/cypress/videos/
+/frontend/cypress/screenshots/
+
 # misc
 .DS_Store
 .env.local

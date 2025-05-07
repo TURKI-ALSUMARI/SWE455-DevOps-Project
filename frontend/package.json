@@ -35,7 +35,8 @@
     "test:lint": "npm run lint && npm run test:ci",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
     "test:watch": "react-scripts test --watch",
-    "test:report": "JEST_JUNIT_OUTPUT_DIR=./test-reports react-scripts test --watchAll=false --ci --testResultsProcessor=jest-junit"
+    "test:report": "JEST_JUNIT_OUTPUT_DIR=./test-reports react-scripts test --watchAll=false --ci --testResultsProcessor=jest-junit",
+    "system-test": "cypress run --spec 'cypress/e2e/system-test.cy.js'"
   },
   "eslintConfig": {
     "extends": [
