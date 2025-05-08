@@ -2,6 +2,9 @@ import { useState } from 'react';
 import SearchForm from '../components/stock/SearchForm';
 import StockResults from '../components/stock/StockResults';
 
+// Get API URL from runtime config
+const API_URL = window.REACT_APP_CONFIG?.API_URL || 'http://localhost:3000';
+
 function SearchPage() {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -12,7 +15,7 @@ function SearchPage() {
     setError(null);
     
     try {
-      const apiUrl = `http://localhost:3000/api/stocks/search?term=${encodeURIComponent(searchParams.term)}&type=${searchParams.type}`;
+      const apiUrl = `${API_URL}/api/stocks/search?term=${encodeURIComponent(searchParams.term)}&type=${searchParams.type}`;
       
       const response = await fetch(apiUrl);
       
