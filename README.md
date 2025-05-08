@@ -145,7 +145,7 @@ npm run lint   # For linting
 ---
 
 ## Directory Structure
-
+```
 /SWE455-DevOps-Project
 ├── backend/
 │   ├── stock-service/       # Node.js backend service
@@ -154,7 +154,7 @@ npm run lint   # For linting
 ├── .github/workflows/       # GitHub Actions CI/CD workflows
 ├── docker-compose.yml       # Container orchestration config
 └── README.md                # Project documentation
-
+```
 ---
 
 ##  Developer Notes
