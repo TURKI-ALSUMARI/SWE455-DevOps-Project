@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/deploy-on-cloud
   workflow_dispatch:
 
 jobs:
