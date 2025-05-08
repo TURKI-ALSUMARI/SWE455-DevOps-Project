@@ -2,8 +2,8 @@ import { useState } from 'react';
 import SearchForm from '../components/stock/SearchForm';
 import StockResults from '../components/stock/StockResults';
 
-// Use environment variable with fallback for local development
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+// Get API URL from runtime config
+const API_URL = window.REACT_APP_CONFIG?.API_URL || 'http://localhost:3000';
 
 function SearchPage() {
   const [searchResults, setSearchResults] = useState([]);
