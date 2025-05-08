@@ -1,0 +1,33 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/frontend/node_modules
+/backend/stock-service/node_modules
+/backend/api-gateway/node_modules
+/backend/node_modules
+.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# Test artifacts
+/frontend/test-reports/
+/backend/test-reports/
+junit.xml
+coverage/
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

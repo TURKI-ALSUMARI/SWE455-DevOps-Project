@@ -1,0 +1,66 @@
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - 'feature/*'  # Trigger on any push to feature branches
+      - 'develop'    # Also trigger on pushes to develop branch
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js for Backend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.18.1'
+
+      - name: Install dependencies for Backend
+        run: npm install
+        working-directory: ./backend  # Adjust the path to your backend directory
+
+      - name: Run Linting for Backend
+        run: npm run lint
+        working-directory: ./backend  # Linting for backend
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.18.1'
+
+      - name: Install dependencies for Backend
+        run: npm install
+        working-directory: ./backend  # Install backend dependencies
+        
+      - name: Install dependencies for api-gateway
+        run: npm install
+        working-directory: ./backend/api-gateway  # Install backend dependencies
+        
+      - name: Install dependencies for stock-service
+        run: npm install
+        working-directory: ./backend/stock-service  # Install backend dependencies
+
+      # Generate test reports
+      - name: Run Tests with Reports
+        run: npm run test:report
+        working-directory: ./backend
+        
+      # Upload test reports as artifacts
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v4 
+        if: always()  # Run even if tests fail
+        with:
+          name: backend-test-reports
+          path: |
+            backend/test-reports/
+            backend/api-gateway/test-reports/
+            backend/stock-service/test-reports/

@@ -1,0 +1,73 @@
+{
+  "name": "swe455-devops-project",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@heroui/button": "^2.2.17",
+    "@heroui/input": "^2.4.17",
+    "@heroui/radio": "^2.3.16",
+    "@heroui/react": "^2.7.6",
+    "@heroui/spinner": "^2.2.14",
+    "@heroui/system": "^2.4.13",
+    "@heroui/table": "^2.2.16",
+    "@heroui/theme": "^2.4.13",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "chart.js": "^4.4.9",
+    "flowbite-react": "^0.11.7",
+    "framer-motion": "^12.9.2",
+    "prop-types": "^15.8.1",
+    "react": "^19.1.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^19.1.0",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test:ci": "react-scripts test --watchAll=false --coverage",
+    "test:lint": "npm run lint && npm run test:ci",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "test:watch": "react-scripts test --watch",
+    "test:report": "JEST_JUNIT_OUTPUT_DIR=./test-reports react-scripts test --watchAll=false --ci --testResultsProcessor=jest-junit"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@ljharb/tsconfig": "^0.3.2",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "jest-junit": "^16.0.0",
+    "postcss": "^8.5.3",
+    "react-scripts": "^5.0.1",
+    "tailwindcss": "^3.4.17"
+  },
+  "jest-junit": {
+    "outputDirectory": "test-reports",
+    "outputName": "junit.xml"
+  }
+}
