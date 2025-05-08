@@ -27,8 +27,8 @@ This project was developed with a strong emphasis on automation, reproducibility
 ### Backend
 
 * Built with **Node.js + Express.js**
-* Communicates with **AlphaVantage** API to fetch real-time stock data
-* Provides a RESTful API to frontend via an **API gateway**
+* Communicates with **TwelveData** API to fetch real-time stock data
+* Provides an API to frontend via an **API gateway**
 
 ### DevOps
 
@@ -37,22 +37,6 @@ This project was developed with a strong emphasis on automation, reproducibility
 * Secrets managed securely via **GitHub Codespaces Secrets**
 * Tested using **Jest** and **Cypress**
 * Vulnerability scanning using **Trivy**
-
----
-
-##  System Architecture
-
-```
-[Frontend (ReactJS)]
-        |
-   [API Gateway]
-        |
-[Stock Service (Node.js)]
-        |
-  [AlphaVantage API]
-```
-
-All services are run in isolated containers using Docker Compose for local development and deployment.
 
 ---
 
@@ -86,7 +70,7 @@ Secrets and tokens are stored securely in **GitHub Secrets**.
 | ---------- | ---------------------- |
 | Frontend   | ReactJS, CSS           |
 | Backend    | Node.js, Express.js    |
-| API        | AlphaVantage API       |
+| API        | TwelveData API       |
 | DevOps     | Docker, GitHub Actions |
 | Testing    | Jest, Cypress, ESLint  |
 | Security   | Trivy                  |
@@ -162,16 +146,14 @@ npm run lint   # For linting
 
 ## Directory Structure
 
-```
 /SWE455-DevOps-Project
-│
-├── frontend/             # ReactJS frontend
-├── stock-service/        # Backend Node.js stock service
-├── api-gateway/          # API gateway routing
-├── .github/workflows/    # GitHub Actions CI/CD pipelines
-├── docker-compose.yml    # Multi-service Docker configuration
-└── README.md             # Project documentation
-```
+├── backend/
+│   ├── stock-service/       # Node.js backend service
+│   └── api-gateway/         # API gateway for routing
+├── frontend/                # React frontend
+├── .github/workflows/       # GitHub Actions CI/CD workflows
+├── docker-compose.yml       # Container orchestration config
+└── README.md                # Project documentation
 
 ---
 
@@ -181,12 +163,3 @@ npm run lint   # For linting
 * Follow commit convention: `[type]: message`, e.g. `feat: add search by stock code`
 * Validate features with tests before merging
 * Environment variables are handled via Codespaces and `.env` files
-
----
-
-## Future Improvements
-
-* Introduce Infrastructure as Code with Terraform
-* Add centralized monitoring and logging
-* Expand E2E test coverage with more scenarios
-
