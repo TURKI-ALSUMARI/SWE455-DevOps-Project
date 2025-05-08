@@ -1,91 +1,161 @@
-
-# Stocks Tracker Application
+#  Stock Tracker
 
 ## Overview
 
-The **Stocks Tracker Application** is a platform designed to monitor and track stock prices, historical data, and perform searches by stock code or name. It uses **Node.js** for the backend and **HTML** and **CSS** for the frontend. The app provides functionalities to search stocks by their ticker symbol, company name, and view stock history. In addition, the app will include graphing and data visualization.
+**Stock Tracker** is a microservice-based web application that enables users to search and monitor real-time stock information using a modern DevOps pipeline. The application includes:
 
+* A **ReactJS frontend** for user interaction
+* A **Node.js backend** with Express.js to fetch and serve stock data
+* An **API Gateway** that routes requests to the backend services
+* Containerized deployment using **Docker**
+* Automated **CI/CD** using GitHub Actions
+* Secure secret and environment handling via **GitHub Codespaces**
 
-## Features
+This project was developed with a strong emphasis on automation, reproducibility, and team collaboration using DevOps best practices.
 
-### Backend:
-- **Search by stock code**: Allows users to search for stocks by their unique ticker symbol.
-- **Search by stock name**: Allows users to search for stocks by their company name.
-- **Historical data**: Fetch histonvmrical stock data (price, volume, etc.).
+---
 
-### Frontend:
-- Basic HTML and CSS frontend to interact with the backend.
-- Displays stock data in a tabular format as well as graphs for data visulization.
+##  Features
 
+### Frontend
 
-## Tech Stack
+* Built with **ReactJS**
+* Search stocks by **ticker symbol** or **company name**
+* Display stock details including price and volume
+* Interactive data **visualizations** (graphs/charts)
 
-- **Backend**: Node.js
-- **Frontend**: HTML, CSS
-- **API**: AlphaVantage (for stock data)
-- **Testing**: Jest (Backend testing)
-- **Linting**: ESLint
-- **CI/CD**: GitHub Actions
+### Backend
 
+* Built with **Node.js + Express.js**
+* Communicates with **AlphaVantage** API to fetch real-time stock data
+* Provides a RESTful API to frontend via an **API gateway**
 
-## Team Roles
+### DevOps
 
-- **Developer** (Yazeed): Responsible for coding the core backend features, setting up the API, and writing tests for the backend logic.
-- **CI/CD Engineer** (Turki): Manages GitHub Actions workflows for continuous integration and continuous deployment, automating linting, testing, and deployment.
-- **Operations/QA Analyst** (Rayan): Oversees testing, logging, and monitoring of the app's production performance.
+* CI/CD pipeline with **GitHub Actions**: Linting, Testing, Security Scanning, and Deployment
+* Containerized with **Docker Compose**
+* Secrets managed securely via **GitHub Codespaces Secrets**
+* Tested using **Jest** and **Cypress**
+* Vulnerability scanning using **Trivy**
 
+---
 
-## Branching Strategy
+##  System Architecture
 
-We follow the **GitFlow** strategy for branching:
+```
+[Frontend (ReactJS)]
+        |
+   [API Gateway]
+        |
+[Stock Service (Node.js)]
+        |
+  [AlphaVantage API]
+```
 
-1. **Main (previously Master) Branch** (`main`): The main branch represents the production-ready state of the project.
-2. **Development Branch** (`develop`): This is the branch where all feature branches are merged. It's where the ongoing development happens.
-3. **Feature Branches**: These are created off `develop` for each new feature or task. Naming convention: `feature/<feature-name>`.
-4. **Release Branches**: Once development reaches a stable point, a release branch is created from `develop` for testing and preparation.
-5. **Hotfix Branches**: These branches are used to address critical issues on the production branch. Naming convention: `hotfix/<issue-name>`.
+All services are run in isolated containers using Docker Compose for local development and deployment.
 
-The following image demostrates how the GitFlow branching strategy works:
-![alt text](https://media.geeksforgeeks.org/wp-content/uploads/20240226111013/image-258.webp)
+---
 
+##  Testing
 
-## Getting Started
+We follow a layered testing approach:
+
+* **Unit Tests**: Jest for backend and frontend units
+* **Integration Tests**: Validate API Gateway and service communication
+* **System Tests**: Cypress-based E2E tests running in Docker environments
+
+---
+
+##  CI/CD Pipeline
+
+CI/CD is fully automated via GitHub Actions and includes:
+
+* Linting (ESLint)
+* Unit Testing (Jest)
+* Integration Testing
+* Security Scanning (Trivy)
+* Deployment to Render.com on merge to `main`
+
+Secrets and tokens are stored securely in **GitHub Secrets**.
+
+---
+
+##  Tech Stack
+
+| Layer      | Tools                  |
+| ---------- | ---------------------- |
+| Frontend   | ReactJS, CSS           |
+| Backend    | Node.js, Express.js    |
+| API        | AlphaVantage API       |
+| DevOps     | Docker, GitHub Actions |
+| Testing    | Jest, Cypress, ESLint  |
+| Security   | Trivy                  |
+| Cloud IDE  | GitHub Codespaces      |
+| Deployment | Render.com             |
+
+---
+
+##  Team & Roles
+
+| Name           | Role            |
+| -------------- | --------------- |
+| Yazeed Alharbi | Developer       |
+| Turki Alsumari | CI/CD Engineer  |
+| Rayan Alamrani | Operations / QA |
+
+---
+
+##  Git Workflow
+
+We use **GitFlow** for collaboration:
+
+* `main`: Production-ready code
+* `develop`: Integration branch
+* `feature/*`: Feature development
+* `release/*`: Pre-release testing
+* `hotfix/*`: Emergency production fixes
+
+![GitFlow Strategy](https://media.geeksforgeeks.org/wp-content/uploads/20240226111013/image-258.webp)
+
+---
+
+##  Getting Started
 
 ### Prerequisites
 
-Ensure you have the following installed:
-- **Node.js**: [Install Node.js](https://nodejs.org/)
-- **npm**: Node.js package manager (comes with Node.js)
+* Node.js
+* Docker
+* Git
 
-### Clone the Repository
+### Clone & Setup
 
 ```bash
 git clone https://github.com/TURKI-ALSUMARI/SWE455-DevOps-Project.git
 cd SWE455-DevOps-Project
 ```
 
-### Install Dependencies
+### Local Development
+
+You can run the app via Docker Compose:
 
 ```bash
-npm install
+docker compose up
 ```
 
-### Run the Backend Locally
-
-To start the server locally, use:
+Or manually for backend (requires `.env`):
 
 ```bash
+cd stock-service
+npm install
 npm start
 ```
 
-The server will be available at `http://localhost:3000`.
-
-### Run Tests
-
-To run the unit tests, use:
+### Running Tests
 
 ```bash
-npm test
+npm test       # For unit tests
+npm run lint   # For linting
+./run-system-tests.sh  # For end-to-end tests
 ```
 
 ---
@@ -93,25 +163,30 @@ npm test
 ## Directory Structure
 
 ```
-/stocks-tracker
-    ├── /src                   # Backend source code
-    │   ├── index.js           # Main server file
-    │   ├── routes/            # API routes
-    │   ├── controllers/       # Business logic
-    │   └── data/              # Stock data (mock or real)
-    ├── /public                # Frontend (HTML, CSS)
-    ├── /tests                 # Unit tests for backend
-    ├── .eslintrc.json          # ESLint configuration
-    ├── package.json           # Node.js dependencies and scripts
-    ├── package-lock.json      # Locked dependency versions
-    └── README.md              # Project documentation
+/SWE455-DevOps-Project
+│
+├── frontend/             # ReactJS frontend
+├── stock-service/        # Backend Node.js stock service
+├── api-gateway/          # API gateway routing
+├── .github/workflows/    # GitHub Actions CI/CD pipelines
+├── docker-compose.yml    # Multi-service Docker configuration
+└── README.md             # Project documentation
 ```
 
+---
 
-### Notes for Developers:
+##  Developer Notes
 
-1. Always create a feature branch from `develop` for new features or bug fixes.
-2. When committing, ensure the commit message follows this format:
-   - **[type]**: A short description of the changes.
-   - Example: `feat: add search by stock code API`.
-3. Each feature must be tested using Jest before merging into `develop`.
+* Use feature branches and open PRs into `develop`
+* Follow commit convention: `[type]: message`, e.g. `feat: add search by stock code`
+* Validate features with tests before merging
+* Environment variables are handled via Codespaces and `.env` files
+
+---
+
+## Future Improvements
+
+* Introduce Infrastructure as Code with Terraform
+* Add centralized monitoring and logging
+* Expand E2E test coverage with more scenarios
+
